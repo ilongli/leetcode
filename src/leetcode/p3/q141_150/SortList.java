@@ -19,22 +19,19 @@ import leetcode.common.ListNode;
  */
 public class SortList {
 
-	// 所用到的常量
-	// 归并后的head
-	public static ListNode mergeHead;
-	// 递归过程的下一个节点(临时节点)
-	public static ListNode nextRight;
-	// 临时节点
-	public static ListNode tempNode;
 
 	public static void main(String[] args) {
-		ListNode head = new ListNode(3);
-		ListNode h2 = new ListNode(2);
-		ListNode h3 = new ListNode(7);
-		ListNode h4 = new ListNode(13);
-//		head.next = h2;
-//		h2.next = h3;
+		ListNode head = new ListNode(-1);
+		ListNode h2 = new ListNode(5);
+		ListNode h3 = new ListNode(3);
+		ListNode h4 = new ListNode(4);
+		ListNode h5 = new ListNode(0);
+		head.next = h2;
+		h2.next = h3;
 		h3.next = h4;
+		h4.next = h5;
+
+
 
 		ListNode _head = new ListNode(4);
 		ListNode _h2 = new ListNode(9);
@@ -44,33 +41,86 @@ public class SortList {
 		_h2.next = _h3;
 		_h3.next = _h4;
 
-		merge(head, null);
+
+//		h4.next = _head;
+
+
+		ListNode mergeHead = new SortList().sortList(head);
+
 
 		while (mergeHead != null) {
 			System.out.print(mergeHead.val + "->");
 			mergeHead = mergeHead.next;
 		}
+
 	}
-	
+
+	// 所用到的变量
+	// 归并后的head
+	public ListNode mergeHead;
+	// 递归过程的下一个节点(临时节点)
+	public ListNode nextRight;
+	// 临时节点
+	public ListNode tempNode, left, right, curNode, pLeft, pRight;
+
+
 	// 4->2->1->3
-    public static ListNode sortList(ListNode head) {
+    public ListNode sortList(ListNode head) {
+
+		if (head == null || head.next == null) return head;
 
 		int curLength = 2;
-		ListNode curNode = head;
 
+		pLeft = divide(head ,curLength);
 
+		while (curNode != null) {
+
+			pRight = divide(curNode, curLength);
+
+			merge(pLeft, pRight);
+
+			pLeft = mergeHead;
+
+			curLength <<= 1;
+		}
         
     	return mergeHead;
     }
 
+	/**
+	 * 分治
+	 * @param head		开始节点
+	 * @param length	长度
+	 * @return			结果
+	 */
+    public ListNode divide(ListNode head, int length) {
+
+    	if (head == null || head.next == null) {
+    		curNode = null;
+    		return head;
+		}
+
+		if (length == 2) {
+			left = head;
+			right = head.next;
+			head.next = null;
+			curNode = right.next;
+			right.next = null;
+			merge(left, right);
+		} else {
+			merge(divide(head, length >> 1), divide(curNode, length >> 1));
+		}
+		return mergeHead;
+	}
 
 
 	/**
 	 * 归并
+	 * 时间复杂度 < O(n)
 	 * @param left		左链表开始节点
 	 * @param right		右链表开始节点
 	 */
-	public static void merge(ListNode left, ListNode right) {
+	public void merge(ListNode left, ListNode right) {
 
 		// check null
 		if (right == null) {
