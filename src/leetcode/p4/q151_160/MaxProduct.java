@@ -6,7 +6,7 @@ package leetcode.p4.q151_160;
  *
  * 示例 1:
  *
- * 输入: [2,3,-2,4]
+ * 输入: [ ]
  * 输出: 6
  * 解释: 子数组 [2,3] 有最大乘积 6。
  * 示例 2:
@@ -30,11 +30,27 @@ public class MaxProduct {
 
     }
 
-
+    /**
+     * 动态规划
+     */
     public int maxProduct(int[] nums) {
-
-        return 0;
+        int n = nums.length;
+        if (n == 0) {
+            return 0;
+        }
+        int dpMax = nums[0];
+        int dpMin = nums[0];
+        int max = nums[0];
+        for (int i = 1; i < n; i++) {
+            //更新 dpMin 的时候需要 dpMax 之前的信息，所以先保存起来
+            int preMax = dpMax;
+            dpMax = Math.max(dpMin * nums[i], Math.max(dpMax * nums[i], nums[i]));
+            dpMin = Math.min(dpMin * nums[i], Math.min(preMax * nums[i], nums[i]));
+            max = Math.max(max, dpMax);
+        }
+        return max;
     }
+
 
     /**
      * 无脑迭代法
