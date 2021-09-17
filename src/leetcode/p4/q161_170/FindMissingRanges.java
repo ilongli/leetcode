@@ -16,7 +16,7 @@ import java.util.List;
  * @author ilongli
  * @date 2021/9/2 9:39
  */
-public class findMissingRanges {
+public class FindMissingRanges {
 
     public List<String> findMissingRanges(int[] nums, int lower, int upper) {
 
